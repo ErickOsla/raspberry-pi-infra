@@ -1,0 +1,36 @@
+name: Deploy to Raspberry Pi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Copy files to Raspberry Pi
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.PI_HOST }}
+        username: ${{ secrets.PI_USER }}
+        key: ${{ secrets.PI_SSH_KEY }}
+        port: 22
+        source: "."
+        target: "~/raspberry-pi-infra"
+
+    - name: SSH and deploy
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.PI_HOST }}
+        username: ${{ secrets.PI_USER }}
+        key: ${{ secrets.PI_SSH_KEY }}
+        port: 22
+        script: |
+          cd ~/raspberry-pi-infra/01-fullstack-app
+          docker compose down
+          docker compose up -d --build
