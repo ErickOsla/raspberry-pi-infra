@@ -3,7 +3,7 @@ name: 🚀 Deploy to Raspberry Pi
 on:
   push:
     branches:
-      - main
+      - main  # ✅ Adjust if your default branch is different
 
 jobs:
   deploy:
@@ -16,14 +16,18 @@ jobs:
       - name: 🔐 Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.PI_SSH_KEY }}" > ~/.ssh/id_rpi_deploy
+          echo "$PI_SSH_KEY" > ~/.ssh/id_rpi_deploy
           chmod 600 ~/.ssh/id_rpi_deploy
-          ssh-keyscan -H ${{ secrets.PI_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$PI_HOST" >> ~/.ssh/known_hosts
+        env:
+          PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+          PI_HOST: ${{ secrets.PI_HOST }}
 
       - name: 🚀 Deploy to Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
-          "cd ~/raspberry-pi-infra/01-fullstack-app && \
-           git pull origin main && \
-           docker compose down && \
-           docker compose up -d --build"
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+            cd ~/raspberry-pi-infra/01-fullstack-app
+            git pull origin main
+            docker compose down
+            docker compose up -d --build
+          EOF
