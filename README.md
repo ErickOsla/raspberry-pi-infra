@@ -31,3 +31,5 @@ new update to the keys
 more uptades done
 
 ssh key confir update
+
+ssh fixed 
