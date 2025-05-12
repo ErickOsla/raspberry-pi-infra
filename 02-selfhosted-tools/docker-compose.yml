@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  pihole:
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80"
+    networks:
+      - tools-net
+
+  nextcloud:
+    image: nextcloud
+    ports:
+      - "8080:80"
+    networks:
+      - tools-net
+
+  bitwarden:
+    image: vaultwarden/server
+    ports:
+      - "8081:80"
+    networks:
+      - tools-net
+
+  tailscale:
+    image: tailscale/tailscale
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - tools-net
+
+networks:
+  tools-net:
+    driver: bridge

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FastAPI Test</title>
+</head>
+<body>
+  <h1>Frontend is working!</h1>
+  <p id="api-response">Loading...</p>
+
+  <script>
+    fetch("/api")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("api-response").innerText = data.message;
+      })
+      .catch(err => {
+        document.getElementById("api-response").innerText = "Error connecting to API.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

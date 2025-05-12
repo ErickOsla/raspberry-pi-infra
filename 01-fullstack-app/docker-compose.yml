@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./backend
+    container_name: fastapi_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/app:/app/app  # Montaje de código en tiempo real
+    command: uvicorn app.main:app --host 0.0.0.0 --port 5000 --reload
+    networks:
+      - dev-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+    networks:
+      - dev-net
+
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: app_db
+    networks:
+      - dev-net
+
+networks:
+  dev-net:
+    driver: bridge
