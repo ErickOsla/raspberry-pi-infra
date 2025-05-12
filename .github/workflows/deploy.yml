@@ -24,8 +24,13 @@ jobs:
           PI_HOST: ${{ secrets.PI_HOST }}
 
       - name: 🚀 Deploy to Raspberry Pi
+        env:  # 🟡 Important: make secrets available to this step
+          PI_HOST: ${{ secrets.PI_HOST }}
+          PI_USER: ${{ secrets.PI_USER }}
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rpi_deploy \
+              -o StrictHostKeyChecking=no \
+              "$PI_USER@$PI_HOST" << 'EOF'
             cd ~/raspberry-pi-infra/01-fullstack-app
             git pull origin main
             docker compose down
