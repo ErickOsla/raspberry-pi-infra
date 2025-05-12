@@ -27,3 +27,5 @@ docker compose up -d --build
 update to .yml for testing autodeploy
 
 new update to the keys
+
+more uptades done
