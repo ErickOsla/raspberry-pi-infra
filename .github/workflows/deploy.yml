@@ -3,7 +3,7 @@ name: 🚀 Deploy to Raspberry Pi
 on:
   push:
     branches:
-      - main  # or "master", depending on your default branch
+      - main
 
 jobs:
   deploy:
@@ -22,10 +22,8 @@ jobs:
 
       - name: 🚀 Deploy to Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
-            cd ~/raspberry-pi-infra/01-fullstack-app
-            git pull origin main
-            docker compose down
-            docker compose up -d --build
-          EOF
-
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} \
+          "cd ~/raspberry-pi-infra/01-fullstack-app && \
+           git pull origin main && \
+           docker compose down && \
+           docker compose up -d --build"
