@@ -25,3 +25,5 @@ cd ~/raspberry-pi-infra/01-fullstack-app
 docker compose up -d --build
 
 update to .yml for testing autodeploy
+
+new update to the keys
