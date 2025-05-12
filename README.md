@@ -24,3 +24,4 @@ Este repositorio contiene la infraestructura y código de una aplicación *Fulls
 cd ~/raspberry-pi-infra/01-fullstack-app
 docker compose up -d --build
 
+update to .yml for testing autodeploy
