@@ -1,36 +1,20 @@
-name: 🚀 Deploy to Raspberry Pi
+name: 🚀 Deploy to Raspberry Pi (Local Runner)
 
 on:
   push:
-    branches:
-      - main  # ✅ Adjust if your default branch is different
+    branches: [main]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name: 🔐 Setup SSH key
+      - name: 🚀 SSH and deploy to Pi
         run: |
-          mkdir -p ~/.ssh
-          echo "$PI_SSH_KEY" > ~/.ssh/id_rpi_deploy
-          chmod 600 ~/.ssh/id_rpi_deploy
-          ssh-keyscan -H "$PI_HOST" >> ~/.ssh/known_hosts
-        env:
-          PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
-          PI_HOST: ${{ secrets.PI_HOST }}
-
-      - name: 🚀 Deploy to Raspberry Pi
-        env:  # 🟡 Important: make secrets available to this step
-          PI_HOST: ${{ secrets.PI_HOST }}
-          PI_USER: ${{ secrets.PI_USER }}
-        run: |
-          ssh -i ~/.ssh/id_rpi_deploy \
-              -o StrictHostKeyChecking=no \
-              "$PI_USER@$PI_HOST" << 'EOF'
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no erick@192.168.0.10 << 'EOF'
             cd ~/raspberry-pi-infra/01-fullstack-app
             git pull origin main
             docker compose down
