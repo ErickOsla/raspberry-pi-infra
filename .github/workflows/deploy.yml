@@ -6,17 +6,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted  # Runner on your Mac
 
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name: 🚀 SSH and deploy to Pi
+      - name: 🚀 Run deploy script on Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no erick@192.168.0.10 << 'EOF'
-            cd ~/raspberry-pi-infra/01-fullstack-app
-            git pull origin main
-            docker compose down
-            docker compose up -d --build
-          EOF
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./deploy.sh
