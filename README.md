@@ -35,3 +35,5 @@ ssh key confir update
 ssh fixed 234123421
 
 self hosted fix update with Github runner on Mac
+
+S3 backup script added to deploy.yml

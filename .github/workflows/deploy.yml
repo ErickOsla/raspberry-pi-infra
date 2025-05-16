@@ -19,3 +19,6 @@ jobs:
             chmod +x ./deploy.sh
             ./deploy.sh
           EOF
+
+      - name: Remote Backup to S3
+        run: ssh -o StrictHostKeyCheking=no ${{ secrets.PI_USER }}@{{ secrets.PI_IP }} 'bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh'
