@@ -21,5 +21,9 @@ jobs:
           EOF
 
       - name: Remote Backup to S3
-        run: ssh -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} 'bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh'
-          
+        run: |
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+            cd ~/raspberry-pi-infra/01-fullstack-app
+            chmod +x ./backup.sh
+            ./backup.sh
+          EOF
