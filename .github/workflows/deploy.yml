@@ -1,4 +1,4 @@
-name: Deploy to Raspberry Pi (Local Runner)name: 🚀 Deploy to Raspberry Pi (Local Runner)
+name: 🚀 Deploy + Backup to Raspberry Pi
 
 on:
   push:
@@ -6,20 +6,19 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted  # GitHub Runner on Mac
+    runs-on: self-hosted  # tu Mac runner
 
     steps:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name:  Run deploy script on Raspberry Pi
+      - name: 🚀 Deploy to Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} \
-          "cd ~/raspberry-pi-infra/01-fullstack-app && chmod +x ./deploy.sh && ./deploy.sh"
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no \
+            ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./deploy.sh
 
-      - name:  Remote Backup to S3
+      - name: 🗄️ Backup after Deploy
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} \
-          "bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh"
-
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no \
+            ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./backup.sh
 
