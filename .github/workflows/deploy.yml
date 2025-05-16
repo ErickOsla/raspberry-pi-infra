@@ -14,11 +14,12 @@ jobs:
 
       - name: 🚀 Deploy to Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no \
-            ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./deploy.sh
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+            cd ~/raspberry-pi-infra/01-fullstack-app
+            chmod +x ./deploy.sh
+            ./deploy.sh
+          EOF
 
-      - name: 🗄️ Backup after Deploy
-        run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no \
-            ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./backup.sh
-
+      - name: Remote Backup to S3
+        run: ssh -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} 'bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh'
+          
