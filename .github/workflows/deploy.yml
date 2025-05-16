@@ -1,4 +1,4 @@
-name: 🚀 Deploy to Raspberry Pi (Local Runner)
+name: Deploy to Raspberry Pi (Local Runner)
 
 on:
   push:
@@ -12,13 +12,14 @@ jobs:
       - name: ⬇️ Checkout code
         uses: actions/checkout@v3
 
-      - name: 🚀 Run deploy script on Raspberry Pi
+      - name:  Run deploy script on Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} << 'EOF'
             cd ~/raspberry-pi-infra/01-fullstack-app
             chmod +x ./deploy.sh
             ./deploy.sh
           EOF
 
-      - name: Remote Backup to S3
-        run: ssh -o StrictHostKeyCheking=no ${{ secrets.PI_USER }}@{{ secrets.PI_IP }} 'bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh'
+      - name:  Remote Backup to S3
+        run: ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_IP }} 'bash ~/raspberry-pi-infra/01-fullstack-app/backup.sh'
+
