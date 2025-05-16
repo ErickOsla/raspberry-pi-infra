@@ -14,4 +14,8 @@ jobs:
 
       - name: 🚀 Run deploy script on Raspberry Pi
         run: |
-          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} 'bash -s' < ./deploy.sh
+          ssh -i ~/.ssh/id_rpi_deploy -o StrictHostKeyChecking=no ${{ secrets.PI_USER }}@${{ secrets.PI_HOST }} << 'EOF'
+            cd ~/raspberry-pi-infra/01-fullstack-app
+            chmod +x ./deploy.sh
+            ./deploy.sh
+          EOF
